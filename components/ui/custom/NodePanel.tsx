@@ -369,14 +369,14 @@ export default function NodePanel() {
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(0.7);
+  const [zoom, setZoom] = useState(0.9);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Layout Constants
   const gridCols = 5;
   const spacingX = 320;
-  const spacingY = 220;
+  const spacingY = 260;
 
   // Process data with positions
   const agents = agentsData.map((agent, index) => ({
@@ -486,7 +486,7 @@ export default function NodePanel() {
           size="icon"
           className="rounded-xl"
           onClick={() => {
-            setZoom(0.7);
+            setZoom(0.9);
             setOffset({ x: 0, y: 0 });
           }}
         >
@@ -506,23 +506,21 @@ export default function NodePanel() {
                   </Badge>
                 </div>
                 <div>
-                  <SheetTitle className="text-4xl font-black tracking-tight">
-                    {selectedAgent.name}
-                  </SheetTitle>
-                  <SheetDescription className="text-lg text-slate-600 mt-2 leading-relaxed">
+                  <SheetTitle>{selectedAgent.name}</SheetTitle>
+                  <SheetDescription>
                     {selectedAgent.personality}
                   </SheetDescription>
                 </div>
               </SheetHeader>
 
               <ScrollArea className="flex-1 -mr-6 pr-6">
-                <div className="py-8 space-y-10 px-5">
+                <div className="py-4 space-y-10 px-5">
                   <DetailSection
                     title="Backstory"
                     content={selectedAgent.backstory}
                   />
 
-                  <div className="bg-orange-50/50 p-6 rounded-2xl border border-orange-100 relative overflow-hidden">
+                  {/* <div className="bg-orange-50/50 p-6 rounded-2xl border border-orange-100 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-10">
                       <MousePointer2 size={48} />
                     </div>
@@ -531,7 +529,7 @@ export default function NodePanel() {
                       content={`"${selectedAgent.voice}"`}
                       isItalic
                     />
-                  </div>
+                  </div> */}
 
                   <DetailSection
                     title="The Coffee Habit"
@@ -543,8 +541,8 @@ export default function NodePanel() {
                       Behavioral Quirks
                     </h4>
                     <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                      <div className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
-                      <p className="text-slate-700 text-sm font-medium">
+                      <div className="h-2 w-4.5 rounded-full bg-orange-500 animate-pulse" />
+                      <p className="text-slate-700 ml-2 text-sm font-medium">
                         {selectedAgent.quirks}
                       </p>
                     </div>

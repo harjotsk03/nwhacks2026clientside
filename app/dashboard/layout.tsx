@@ -20,8 +20,8 @@ export default function DashboardLayout({
         <div className="flex-1 overflow-y-auto">
           <DashboardNav />
         </div>
-        <div className="p-4 border-t">
-          <div className="bg-slate-50 p-3 rounded-lg border">
+        <div className="p-2 h-16 border-t">
+          <div className="bg-slate-50 px-2.5 py-1.5 rounded-lg border">
             <p className="text-xs font-semibold">UBC Location</p>
             <p className="text-[10px] text-muted-foreground truncate">
               Perugia Italian Caffè

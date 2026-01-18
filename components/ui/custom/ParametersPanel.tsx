@@ -95,7 +95,7 @@ export default function ParametersPanel({
   };
 
   return (
-    <div className="bg-white min-h-screen w-full px-4 py-2">
+    <div className="bg-white min-h-screen w-full px-4 py-4">
       <div className="max-w-4xl mx-auto space-y-4">
         <div>
           <CardTitle>Adjustment Parameters</CardTitle>
@@ -203,7 +203,7 @@ export default function ParametersPanel({
                     <Label className="text-xs text-muted-foreground uppercase tracking-wider">
                       Quick Tactics
                     </Label>
-                    <div className="grid grid-cols-2 gap-2 mt-2">
+                    <div className="grid grid-cols-1 gap-2 mt-2">
                       {[
                         "Buy 10 Get 1 Free",
                         "Buy 2 Donuts, 1 Free Coffee",
@@ -214,8 +214,8 @@ export default function ParametersPanel({
                           <Button
                             key={t}
                             variant={isActive ? "default" : "outline"}
-                            size={"sm"}
-                            className="justify-start transition-all"
+                            size="sm"
+                            className="justify-start break-words"
                             onClick={() => toggleTactic(t)}
                           >
                             {isActive && (
@@ -312,7 +312,7 @@ function RecommendationCard({
   icon: React.ReactNode;
 }) {
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-primary">
+    <Card className="h-40 cursor-pointer">
       <CardHeader className="flex flex-row items-center gap-4 py-4">
         <div className="p-2 bg-slate-100 rounded-full">{icon}</div>
         <div>

@@ -2,6 +2,12 @@
 
 import * as React from "react";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -471,34 +477,56 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
   const [editingRowId, setEditingRowId] = React.useState<number | null>(null);
   const [editPrice, setEditPrice] = React.useState<number>(0);
   const [aiPrompt, setAiPrompt] = React.useState<string>("");
+  const [isPriceModalOpen, setIsPriceModalOpen] = React.useState(false);
+  const [priceBuffer, setPriceBuffer] = React.useState("");
+  const [activeProductId, setActiveProductId] = React.useState<number | null>(
+    null,
+  );
+
 
   const handleStartEdit = (id: number, currentPrice: number) => {
-    setEditingRowId(id);
-    setEditPrice(currentPrice);
+    setActiveProductId(id);
+    setPriceBuffer(currentPrice.toFixed(2));
+    setIsPriceModalOpen(true);
   };
 
-  const handleSaveEdit = (id: number) => {
-    const productToUpdate = data.find((item) => item.id === id);
-    if (productToUpdate) {
-      if (editPrice < productToUpdate.original_price) {
-        alert("Price cannot be lower than cost!");
-        return;
-      }
-      onPriceChange(productToUpdate.product, editPrice);
-      setData((prevData) =>
-        prevData.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                prev_price: item.retail_price,
-                retail_price: editPrice,
-              }
-            : item,
-        ),
-      );
+  const keypadKeys = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    ".",
+    "0",
+    "⌫",
+  ];
+
+  const handleSaveEdit = (id: number, newPrice: number) => {
+    const product = data.find((p) => p.id === id);
+    if (!product) return;
+
+    if (newPrice < product.original_price) {
+      alert("Price cannot be lower than cost!");
+      return;
     }
-    setEditingRowId(null);
+
+    onPriceChange(product.product, newPrice);
+
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, prev_price: item.retail_price, retail_price: newPrice }
+          : item,
+      ),
+    );
   };
+
+  const activeProduct = data.find((p) => p.id === activeProductId);
+
 
   const columns: ColumnDef<CafeProduct>[] = [
     {
@@ -558,29 +586,29 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
       header: "",
       cell: ({ row }) => {
         const isEditing = editingRowId === row.original.id;
-        if (isEditing) {
-          return (
-            <div className="flex items-center gap-1 justify-end">
-              <Input
-                type="number"
-                autoFocus
-                value={editPrice}
-                onChange={(e) => setEditPrice(parseFloat(e.target.value) || 0)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && handleSaveEdit(row.original.id)
-                }
-                className="w-14 h-7 text-[10px] px-1"
-              />
-              <Button
-                size="icon"
-                className="h-7 w-7"
-                onClick={() => handleSaveEdit(row.original.id)}
-              >
-                <Check className="h-3 w-3" />
-              </Button>
-            </div>
-          );
-        }
+        // if (isEditing) {
+        //   return (
+        //     <div className="flex items-center gap-1 justify-end">
+        //       <Input
+        //         type="number"
+        //         autoFocus
+        //         value={editPrice}
+        //         onChange={(e) => setEditPrice(parseFloat(e.target.value) || 0)}
+        //         onKeyDown={(e) =>
+        //           e.key === "Enter" && handleSaveEdit(row.original.id)
+        //         }
+        //         className="w-14 h-7 text-[10px] px-1"
+        //       />
+        //       <Button
+        //         size="icon"
+        //         className="h-7 w-7"
+        //         onClick={() => handleSaveEdit(row.original.id)}
+        //       >
+        //         <Check className="h-3 w-3" />
+        //       </Button>
+        //     </div>
+        //   );
+        // }
         return (
           <div className="text-right">
             <Button
@@ -609,6 +637,25 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
     onColumnVisibilityChange: setColumnVisibility,
     state: { sorting, columnVisibility },
   });
+
+  const handleKeyboardInput = (input: string) => {
+    const cleaned = input.replace(/[^\d.]/g, "");
+    // prevent multiple decimals
+    const parts = cleaned.split(".");
+    const valid = parts.length > 2 ? parts[0] + "." + parts[1] : cleaned;
+    setPriceBuffer(valid.slice(0, 7));
+  };
+
+  const handleKeyPress = (key: string) => {
+    if (key === "⌫") {
+      setPriceBuffer((prev) => prev.slice(0, -1));
+      return;
+    }
+    if (key === "." && priceBuffer.includes(".")) return;
+    setPriceBuffer((prev) => (prev + key).slice(0, 7));
+  };
+
+
 
   return (
     <div className="w-full">
@@ -654,7 +701,7 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
         </div>
       </div>
 
-      <div className="relative h-[480px] overflow-auto no-scrollbar rounded-md border">
+      <div className="relative h-128 overflow-auto no-scrollbar rounded-md border">
         <Table>
           <TableHeader className="sticky top-0 z-20 bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -683,6 +730,79 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
           </TableBody>
         </Table>
       </div>
+      <Dialog open={isPriceModalOpen} onOpenChange={setIsPriceModalOpen}>
+        <DialogContent className="max-w-xs">
+          <DialogHeader>
+            <DialogTitle className="text-center">Set Price</DialogTitle>
+          </DialogHeader>
+
+          <input
+            type="text"
+            inputMode="decimal"
+            pattern="[0-9]*"
+            autoFocus
+            value={priceBuffer}
+            onChange={(e) => handleKeyboardInput(e.target.value)}
+            className="absolute opacity-0"
+          />
+
+          {activeProduct && (
+            <div className="mb-4 text-center text-xs text-muted-foreground">
+              <div>Cost Price: ${activeProduct.original_price.toFixed(2)}</div>
+              <div>
+                Previous Price: $
+                {(
+                  activeProduct.prev_price ?? activeProduct.retail_price
+                ).toFixed(2)}
+              </div>
+            </div>
+          )}
+
+          {/* Price Display */}
+          <div className="text-center text-3xl font-bold py-2">
+            ${priceBuffer || "0.00"}
+          </div>
+
+          {/* Keypad */}
+          <div className="grid grid-cols-3 gap-3">
+            {keypadKeys.map((key) => (
+              <Button
+                key={key}
+                variant="secondary"
+                className="h-14 text-lg"
+                onClick={() => handleKeyPress(key)}
+              >
+                {key}
+              </Button>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 mt-4">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setIsPriceModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1"
+              onClick={() => {
+                if (!activeProductId) return;
+
+                const newPrice = parseFloat(priceBuffer);
+                if (isNaN(newPrice)) return;
+
+                handleSaveEdit(activeProductId, newPrice);
+                setIsPriceModalOpen(false);
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

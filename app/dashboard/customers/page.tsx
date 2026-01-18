@@ -16,9 +16,12 @@ export default function Customers () {
       { passive: false },
     );
     },[])
-    return(
-        <div className="w-full h-screen">
-            <NodePanel />
+    return (
+      <div className="w-full h-screen">
+        <div className="w-full h-16 border-b border-stone-200 bg-white fixed z-50"></div>
+        <div className="pt-16">
+          <NodePanel />
         </div>
-    )
+      </div>
+    );
 }

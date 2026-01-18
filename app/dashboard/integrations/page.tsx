@@ -111,30 +111,10 @@ export default function Integrations() {
       />
 
       {/* Header */}
-      <header className="relative z-10 border-b bg-white/80 backdrop-blur-md px-8 py-6">
-        <div className="max-w-7xl mx-auto flex justify-between items-end">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-black tracking-tight text-slate-900">
-                Integrations
-              </h1>
-            </div>
-            <p className="text-slate-500">
-              Connect your commerce tools to feed live data into the agent
-              simulations.
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            className="rounded-xl font-bold border-slate-300"
-          >
-            Request Custom Integration
-          </Button>
-        </div>
-      </header>
+      <div className="w-full h-16 border-b border-stone-200 bg-white fixed z-50"></div>
 
       {/* Content */}
-      <ScrollArea className="flex-1 relative z-10">
+      <div className="flex-1 relative overflow-scroll z-10 pt-16">
         <div className="max-w-7xl mx-auto p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {integrations.map((item) => (
@@ -211,7 +191,7 @@ export default function Integrations() {
             </p>
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
