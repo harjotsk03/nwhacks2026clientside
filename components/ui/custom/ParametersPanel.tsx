@@ -206,9 +206,8 @@ export default function ParametersPanel({
                     <div className="grid grid-cols-2 gap-2 mt-2">
                       {[
                         "Buy 10 Get 1 Free",
-                        "Early Bird 15%",
-                        "Free Shipping",
-                        "Referral Bonus",
+                        "Buy 2 Donuts, 1 Free Coffee",
+                        "Donate and Win",
                       ].map((t) => {
                         const isActive = selectedTactics.includes(t);
                         return (

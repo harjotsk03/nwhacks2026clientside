@@ -338,7 +338,7 @@ const AgentCard: React.FC<{ agent: Agent; onClick: () => void }> = ({
   return (
     <Card
       onClick={onClick}
-      className="w-64 cursor-pointer hover:shadow-xl hover:border-blue-400 transition-all active:scale-95 select-none bg-white/90 backdrop-blur-sm"
+      className="w-64 cursor-pointer hover:shadow-xl hover:border-orange-400 transition-all active:scale-95 select-none bg-white/90 backdrop-blur-sm"
     >
       <CardHeader className="p-4 pb-2">
         <div className="flex items-start justify-between gap-2">
@@ -522,7 +522,7 @@ export default function NodePanel() {
                     content={selectedAgent.backstory}
                   />
 
-                  <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 relative overflow-hidden">
+                  <div className="bg-orange-50/50 p-6 rounded-2xl border border-orange-100 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-10">
                       <MousePointer2 size={48} />
                     </div>
@@ -543,7 +543,7 @@ export default function NodePanel() {
                       Behavioral Quirks
                     </h4>
                     <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                      <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                      <div className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
                       <p className="text-slate-700 text-sm font-medium">
                         {selectedAgent.quirks}
                       </p>

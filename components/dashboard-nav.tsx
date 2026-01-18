@@ -13,13 +13,14 @@ import {
   Layers,
   Workflow,
   UserCircle2,
+  Computer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Simulation", href: "/dashboard/simulator", icon: Workflow },
   { name: "Customers", href: "/dashboard/customers", icon: UserCircle2 },
-  // { name: "Customer Agents", href: "/agents", icon: Users },
+  { name: "Integrations", href: "/dashboard/integrations", icon: Computer },
   // { name: "Market Context", href: "/market", icon: Layers },
   // { name: "Business Info", href: "/business", icon: Store },
   // { name: "Analytics", href: "/analytics", icon: BarChart3 },
