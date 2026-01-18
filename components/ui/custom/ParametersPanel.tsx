@@ -30,7 +30,21 @@ const AVAILABLE_EMPLOYEES = [
   { name: "Diana Prince", rate: 40 },
 ];
 
-export default function ParametersPanel() {
+interface SimConfig {
+  employees: { name: string; rate: number; hours: number }[];
+  marketingTactics: string[];
+  productChanges: Record<string, number>;
+}
+
+interface ParametersPanelProps {
+  config: SimConfig;
+  onConfigChange: (config: SimConfig) => void;
+}
+
+export default function ParametersPanel({
+  config,
+  onConfigChange,
+}: ParametersPanelProps) {
   // State for Employee Tab
   const [isEmployeeEnabled, setIsEmployeeEnabled] = useState(false);
   const [addMarketing, setAddMarketing] = useState(false);
@@ -57,6 +71,25 @@ export default function ParametersPanel() {
     const updated = [...activeStaff];
     updated[index].hours = Number(hours);
     setActiveStaff(updated);
+  };
+
+  const [selectedTactics, setSelectedTactics] = useState<string[]>([]);
+
+  // Sync local changes to Parent whenever they change
+  React.useEffect(() => {
+    onConfigChange({
+      ...config,
+      employees: isEmployeeEnabled ? activeStaff : [],
+      marketingTactics: addMarketing ? selectedTactics : [],
+    });
+  }, [activeStaff, selectedTactics, isEmployeeEnabled, addMarketing]);
+
+  const toggleTactic = (tactic: string) => {
+    setSelectedTactics((prev) =>
+      prev.includes(tactic)
+        ? prev.filter((t) => t !== tactic)
+        : [...prev, tactic],
+    );
   };
 
   return (
@@ -152,42 +185,95 @@ export default function ParametersPanel() {
 
           {/* --- MARKETING TAB --- */}
           <TabsContent value="marketing" className="space-y-4">
-            <Card>
-              <div className="flex items-center justify-between w-11/12 mx-auto">
-                <Label htmlFor="airplane-mode">Add Marketing Tactics</Label>
-
+            <Card className="py-4">
+              <div className="flex items-center justify-between w-11/12 mx-auto mb-4">
+                <Label htmlFor="marketing-toggle">Add Marketing Tactics</Label>
                 <Switch
+                  id="marketing-toggle"
                   checked={addMarketing}
                   onCheckedChange={(value) => setAddMarketing(value)}
                 />
               </div>
+
               {addMarketing && (
-                <div className="px-4 flex flex-col justify-end h-98">
-                  <Label>Quick Tactics</Label>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {[
-                      "Buy 10 Get 1 Free",
-                      "Early Bird 15%",
-                      "Free Shipping",
-                      "Referral Bonus",
-                    ].map((t) => (
-                      <Button
-                        key={t}
-                        variant="outline"
-                        size={"sm"}
-                        className="justify-start"
-                      >
-                        {t}
-                      </Button>
-                    ))}
+                <div className="px-4 flex flex-col justify-between min-h-99">
+                  <div>
+                    <Label className="text-xs text-muted-foreground uppercase tracking-wider">
+                      Quick Tactics
+                    </Label>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      {[
+                        "Buy 10 Get 1 Free",
+                        "Early Bird 15%",
+                        "Free Shipping",
+                        "Referral Bonus",
+                      ].map((t) => {
+                        const isActive = selectedTactics.includes(t);
+                        return (
+                          <Button
+                            key={t}
+                            variant={isActive ? "default" : "outline"}
+                            size={"sm"}
+                            className="justify-start transition-all"
+                            onClick={() => toggleTactic(t)}
+                          >
+                            {isActive && (
+                              <Plus className="h-3 w-3 mr-2 rotate-45" />
+                            )}
+                            {t}
+                          </Button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Active Params List */}
+                    {selectedTactics.length > 0 && (
+                      <div className="mt-4">
+                        <Label className="text-[10px] text-muted-foreground uppercase">
+                          Active Parameters
+                        </Label>
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {selectedTactics.map((tactic) => (
+                            <div
+                              key={tactic}
+                              className="flex items-center gap-1.5 px-2 py-1 bg-primary/10 text-primary rounded-md text-[10px] font-medium border border-primary/20"
+                            >
+                              {tactic}
+                              <button
+                                onClick={() => toggleTactic(tactic)}
+                                className="hover:text-red-500 transition-colors"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex flex-row items-center justify-between -mb-1 gap-2 mt-3">
+
+                  {/* Custom Text Input */}
+                  <div className="flex flex-row items-center justify-between gap-2 mt-6">
                     <Input
-                      placeholder="Ask the chatbot..."
+                      placeholder="Type a custom tactic and press Enter..."
                       value={chatMessage}
                       onChange={(e) => setChatMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && chatMessage.trim()) {
+                          toggleTactic(chatMessage.trim());
+                          setChatMessage("");
+                        }
+                      }}
                     />
-                    <Button size="icon">
+                    <Button
+                      size="icon"
+                      className="shrink-0"
+                      disabled={!chatMessage.trim()}
+                      onClick={() => {
+                        toggleTactic(chatMessage.trim());
+                        setChatMessage("");
+                      }}
+                    >
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
@@ -197,10 +283,7 @@ export default function ParametersPanel() {
           </TabsContent>
 
           {/* --- RECOMMENDED TAB --- */}
-          <TabsContent
-            value="recommended"
-            className="grid grid-cols-1 gap-4"
-          >
+          <TabsContent value="recommended" className="grid grid-cols-1 gap-4">
             <RecommendationCard
               title="Increase Inventory: Logistics"
               desc="Market sentiment shows a 12% rise in demand for local delivery due to recent fuel price drops."

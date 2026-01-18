@@ -11,16 +11,18 @@ import {
   BarChart3,
   Settings,
   Layers,
+  Workflow,
+  UserCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Simulations", href: "/simulations", icon: PlayCircle },
-  { name: "Products", href: "/products", icon: Package },
-  { name: "Customer Agents", href: "/agents", icon: Users },
-  { name: "Market Context", href: "/market", icon: Layers },
-  { name: "Business Info", href: "/business", icon: Store },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Simulation", href: "/dashboard/simulator", icon: Workflow },
+  { name: "Customers", href: "/dashboard/customers", icon: UserCircle2 },
+  // { name: "Customer Agents", href: "/agents", icon: Users },
+  // { name: "Market Context", href: "/market", icon: Layers },
+  // { name: "Business Info", href: "/business", icon: Store },
+  // { name: "Analytics", href: "/analytics", icon: BarChart3 },
 ];
 
 export function DashboardNav() {
@@ -28,9 +30,6 @@ export function DashboardNav() {
 
   return (
     <nav className="flex flex-col gap-2 p-4">
-      <div className="mb-6 px-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-        Simulator Menu
-      </div>
       {navItems.map((item) => {
         const Icon = item.icon;
         return (
