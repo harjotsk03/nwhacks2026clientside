@@ -2,11 +2,20 @@
 
 import { CardType } from "@/types/Card";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { CardDemo } from "./CardDemo";
-import { Button } from "../button";
-import { Minus, Plus, RefreshCcw } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+
+type DashboardTab = "market" | "profit" | "customers";
 
 export default function NodePanel() {
   const cards: CardType[] = [
@@ -17,128 +26,106 @@ export default function NodePanel() {
     { id: "3", label: "AI Agent 3", x: 540, y: 20 },
   ];
 
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const tabs = useMemo(
+    () =>
+      [
+        { id: "market" as const, label: "Market Analytics" },
+        { id: "profit" as const, label: "Profit Margin" },
+        { id: "customers" as const, label: "Customer Insights" },
+      ] as const,
+    []
+  );
 
-  const [dragging, setDragging] = useState(false);
-
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
-  const [zoom, setZoom] = useState(0.7);
-
-  const handleZoomIn = () => {
-    setZoom((prev) => Math.min(prev + 0.1, 3));
-  };
-
-  const handleZoomOut = () => {
-    setZoom((prev) => Math.max(prev - 0.1, 0.1));
-  };
-
-  const handleResetZoom = () => {
-    setZoom(0.7);
-
-    setOffset({ x: 0, y: 0 });
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setDragging(true);
-
-    setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (dragging) {
-      setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
-    }
-  };
-
-  const handleMouseUp = () => setDragging(false);
-
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-
-    const delta = e.deltaY * -0.001;
-
-    const newZoom = Math.min(Math.max(0.1, zoom + delta), 3);
-
-    // Get mouse position relative to the canvas
-
-    const rect = e.currentTarget.getBoundingClientRect();
-
-    const mouseX = e.clientX - rect.left;
-
-    const mouseY = e.clientY - rect.top;
-
-    // Calculate the point under the mouse before zoom
-
-    const pointX = (mouseX - offset.x) / zoom;
-
-    const pointY = (mouseY - offset.y) / zoom;
-
-    // Calculate new offset to keep the point under the mouse
-
-    const newOffsetX = mouseX - pointX * newZoom;
-
-    const newOffsetY = mouseY - pointY * newZoom;
-
-    setZoom(newZoom);
-
-    setOffset({ x: newOffsetX, y: newOffsetY });
-  };
-
-  const handleCardClick = (id: string) => {
-    alert(`Clicked card ${id}`);
-  };
+  const [activeTab, setActiveTab] = useState<DashboardTab>("market");
 
   return (
-    <div
-      className="w-full h-full bg-white overflow-hidden relative"
-      style={{
-        backgroundImage: `radial-gradient(#d1d5db 0.75px, transparent 0.75px)`,
+    <div className="w-full h-full bg-white p-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead colSpan={2} className="p-0">
+              <div className="flex items-center gap-1 p-2">
+                {tabs.map((tab) => {
+                  const isActive = tab.id === activeTab;
+                  return (
+                    <Button
+                      key={tab.id}
+                      type="button"
+                      size="sm"
+                      variant={isActive ? "default" : "ghost"}
+                      aria-pressed={isActive}
+                      onClick={() => setActiveTab(tab.id)}
+                      className="rounded-md"
+                    >
+                      {tab.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            </TableHead>
+          </TableRow>
 
-        backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
+          <TableRow>
+            {activeTab === "market" && (
+              <>
+                <TableHead>Metric</TableHead>
+                <TableHead>Value</TableHead>
+              </>
+            )}
 
-        backgroundPosition: `${offset.x}px ${offset.y}px`,
-      }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onWheel={handleWheel}
-    >
-      <div
-        className="w-full h-full"
-        style={{
-          transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+            {activeTab === "profit" && (
+              <>
+                <TableHead>Product</TableHead>
+                <TableHead>Margin</TableHead>
+              </>
+            )}
 
-          transformOrigin: "0 0",
-        }}
-      >
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className="absolute"
-            style={{ left: card.x, top: card.y }}
-          >
-            <CardDemo card={card} />
-          </div>
-        ))}
-      </div>
+            {activeTab === "customers" && (
+              <>
+                <TableHead>Segment</TableHead>
+                <TableHead>Score</TableHead>
+              </>
+            )}
+          </TableRow>
+        </TableHeader>
 
-      {/* Zoom Controls */}
+        <TableBody>
+          {activeTab === "market" && (
+            <>
+              <TableRow>
+                <TableCell>Trend Snapshot</TableCell>
+                <TableCell>—</TableCell>
+              </TableRow>
+            </>
+          )}
 
-      <div className="absolute h-max bottom-4 right-4 flex flex-row gap-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2">
-        <Button onClick={handleZoomIn}>
-          <Plus />
-        </Button>
-        <Button variant={"ghost"} className="hover:cursor-default hover:bg-transparent">{Math.round(zoom * 100)}%</Button>
-        <Button onClick={handleZoomOut}>
-          <Minus />
-        </Button>
+          {activeTab === "profit" && (
+            <>
+              <TableRow>
+                <TableCell>Product A</TableCell>
+                <TableCell>—</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Product B</TableCell>
+                <TableCell>—</TableCell>
+              </TableRow>
+            </>
+          )}
 
-        <Button onClick={handleResetZoom}>
-          <RefreshCcw />
-        </Button>
-      </div>
+          {activeTab === "customers" && (
+            <>
+              <TableRow>
+                <TableCell>New Users</TableCell>
+                <TableCell>—</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Returning Users</TableCell>
+                <TableCell>—</TableCell>
+              </TableRow>
+            </>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }
