@@ -235,8 +235,10 @@ export default function Simulator() {
       <Dialog open={showTutorial} onOpenChange={setShowTutorial}>
         <DialogContent className="sm:max-w-[450px] border-none">
           <DialogHeader className="space-y-3">
-            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center mb-2">
-              <Play className="text-white h-6 w-6 fill-current" />
+            <div className="h-max flex items-center text-xl font-bold tracking-tighter">
+              <span className="bg-orange-600 text-white px-2 py-0.5 rounded mr-2">
+                L
+              </span>
             </div>
             <DialogTitle className="text-2xl font-bold tracking-tight">
               Welcome to the Simulator
@@ -250,12 +252,11 @@ export default function Simulator() {
           <div className="py-6 space-y-6">
             {/* Step 1 */}
             <div className="flex gap-4 items-start">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 font-bold text-sm">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-600/10 border border-orange-600/40 font-bold text-orange-600 text-sm">
                 1
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Tag className="h-4 w-4" />
                   <p className="font-semibold">Adjust product prices</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -267,12 +268,11 @@ export default function Simulator() {
 
             {/* Step 2 */}
             <div className="flex gap-4 items-start">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 font-bold text-sm">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-600/10 border border-orange-600/40 font-bold text-orange-600 text-sm">
                 2
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Play className="h-4 w-4" />
                   <p className="font-semibold">Run the simulation</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -284,12 +284,11 @@ export default function Simulator() {
 
             {/* Step 3 */}
             <div className="flex gap-4 items-start">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 font-bold text-sm">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-600/10 border border-orange-600/40 font-bold text-orange-600 text-sm">
                 3
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <LineChart className="h-4 w-4" />
                   <p className="font-semibold">Analyze & Tweak</p>
                 </div>
                 <p className="text-sm text-muted-foreground">

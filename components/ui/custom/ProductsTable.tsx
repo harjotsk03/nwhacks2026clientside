@@ -679,14 +679,14 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
                 <Sparkles className="h-3 w-3" /> AI Helper
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-4 border-stone-200" align="end">
+            <PopoverContent className="w-88 p-4 border-stone-200" align="end">
               <div className="space-y-3">
                 <h4 className="text-xs font-bold flex items-center gap-2 text-black uppercase tracking-tighter">
                   <Sparkles className="h-3 w-3" /> Smart Pricing Assistant
                 </h4>
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Suggest margins for bakery..."
+                    placeholder="Increase all cold drinks by 20%..."
                     className="h-8 text-xs"
                     value={aiPrompt}
                     onChange={(e) => setAiPrompt(e.target.value)}

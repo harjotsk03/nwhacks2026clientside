@@ -300,17 +300,17 @@ export default function SetupWizard() {
                   onChange={(e) => updateField("businessName", e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 w-full">
                 <Label>Business Type</Label>
                 <Select
                   value={formData.businessCategory}
                   onValueChange={(v) => updateField("businessCategory", v)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="coffee-shop">Coffee Shop</SelectItem>
+                    <SelectItem value="coffee-shop">Cafè</SelectItem>
                     <SelectItem value="restaurant">Restaurant</SelectItem>
                     <SelectItem value="retail">Retail Store</SelectItem>
                     <SelectItem value="salon">Salon/Spa</SelectItem>
@@ -369,7 +369,7 @@ export default function SetupWizard() {
                   value={formData.primarySegment}
                   onValueChange={(v) => updateField("primarySegment", v)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -503,12 +503,12 @@ export default function SetupWizard() {
                 </div>
               </div>
 
-              <div className="rounded-lg bg-slate-900 p-4 text-slate-50">
+              <div className="rounded-lg bg-orange-600/10 border border-orange-600 p-4 text-orange-600">
                 <div className="flex gap-3">
-                  <Sparkles className="h-5 w-5 shrink-0 text-yellow-400" />
+                  <Sparkles className="h-5 w-5 shrink-0 text-orange-600" />
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Ready to simulate!</p>
-                    <p className="text-xs text-slate-400 leading-relaxed">
+                    <p className="text-xs text-orange-800/70 leading-relaxed">
                       We'll create 500+ AI customer agents based on your
                       demographics to test against your inventory.
                     </p>
