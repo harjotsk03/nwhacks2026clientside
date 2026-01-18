@@ -12,10 +12,10 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 w-64 border-r bg-white hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 text-xl font-bold tracking-tighter border-b border-stone-200">
-          <span className="bg-black text-white px-2 py-0.5 rounded mr-2">
-            S
+          <span className="bg-orange-600 text-white px-2 py-0.5 rounded mr-2">
+            L
           </span>
-          SimulAI
+          LocalLens
         </div>
         <div className="flex-1 overflow-y-auto">
           <DashboardNav />

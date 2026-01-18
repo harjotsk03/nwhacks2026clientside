@@ -328,7 +328,7 @@ export default function Simulator() {
                   {/* Decorative background glow */}
                   <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-orange-400/10 blur-2xl transition-all group-hover:bg-orange-400/20" />
 
-                  <div className="relative flex flex-col gap-3">
+                  {/* <div className="relative flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-white">
@@ -361,11 +361,11 @@ export default function Simulator() {
                         over the next quarter.
                       </p>
 
-                      {/* <button className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-tighter text-orange-600 hover:text-orange-700 transition-colors">
+                      <button className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-tighter text-orange-600 hover:text-orange-700 transition-colors">
                       View full breakdown <ArrowRight className="h-3 w-3" />
-                    </button> */}
+                    </button>
                     </div>
-                  </div>
+                  </div> */}
                 </motion.div>
               )}
               <Map
