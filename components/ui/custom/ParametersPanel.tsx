@@ -30,6 +30,8 @@ const AVAILABLE_EMPLOYEES = [
   { name: "Diana Prince", rate: 40 },
 ];
 
+
+
 interface SimConfig {
   employees: { name: string; rate: number; hours: number }[];
   marketingTactics: string[];
@@ -185,8 +187,8 @@ export default function ParametersPanel({
 
           {/* --- MARKETING TAB --- */}
           <TabsContent value="marketing" className="space-y-4">
-            <Card className="py-4">
-              <div className="flex items-center justify-between w-11/12 mx-auto mb-4">
+            <Card className="py-4 h-full">
+              <div className="flex items-center justify-between w-11/12 mx-auto py-2">
                 <Label htmlFor="marketing-toggle">Add Marketing Tactics</Label>
                 <Switch
                   id="marketing-toggle"

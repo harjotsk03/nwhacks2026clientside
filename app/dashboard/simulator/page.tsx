@@ -34,6 +34,7 @@ import ParametersPanel from "@/components/ui/custom/ParametersPanel";
 import Map from "@/components/Map";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ChartLineMultiple } from "@/components/ui/custom/chart-line-multiple";
 
 type CustomerType = "student" | "middle-aged" | "elderly";
 
@@ -332,6 +333,9 @@ export default function Simulator() {
                 customers={customers}
                 isSimulating={isRunningSim && !simComplete}
               />
+              <div className="mt-4">
+                <ChartLineMultiple />
+              </div>
             </div>
 
             {/* Right: Results Side (The thing you wanted to show when complete) */}
@@ -446,7 +450,9 @@ export default function Simulator() {
               <Check className="h-4 w-4" /> Simulation Complete
             </>
           ) : (
-            "Run Simulation"
+            <>
+              <Play /> Run Simulation
+            </>
           )}
         </Button>
       </div>

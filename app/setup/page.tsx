@@ -200,9 +200,9 @@ export default function SetupWizard() {
           <CardHeader className="space-y-1">
             <div className="flex h-12 w-12 items-center justify-center rounded-full border bg-background mb-2 animate-pulse">
               {isCust ? (
-                <UserPlus className="h-6 w-6 text-primary" />
+                <UserPlus className="h-6 w-6 text-orange-600" />
               ) : (
-                <Sparkles className="h-6 w-6 text-primary" />
+                <Sparkles className="h-6 w-6 text-orange-600" />
               )}
             </div>
             <CardTitle className="text-2xl">
@@ -216,7 +216,7 @@ export default function SetupWizard() {
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-6 py-8">
             <div className="flex flex-col items-center gap-2 text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary/60" />
+              <Loader2 className="h-8 w-8 animate-spin text-orange-600/60" />
               <p className="text-sm font-medium text-muted-foreground">
                 {isCust ? customerStatus : analysisStep}
               </p>
@@ -487,7 +487,7 @@ export default function SetupWizard() {
             <div className="space-y-4">
               <div className="flex items-start gap-4 rounded-lg border p-4 bg-slate-50/50">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                  <FileText className="h-5 w-5 text-primary" />
+                  <FileText className="h-5 w-5 text-orange-600" />
                 </div>
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">

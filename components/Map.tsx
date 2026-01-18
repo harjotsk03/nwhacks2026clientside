@@ -103,7 +103,7 @@ const Map = ({ customers, isSimulating }: MapProps) => {
             <div className="bg-white p-2 rounded-lg border border-slate-200">
               <Coffee className="text-slate-600 w-4 h-4" />
             </div>
-            <span className="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400">
+            <span className="absolute top-10 left-1/2 -translate-x-1/2 whitespace-wrap text-center text-xs font-semibold text-slate-400">
               {shop.name}
             </span>
           </div>

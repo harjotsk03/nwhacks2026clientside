@@ -546,7 +546,7 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
               )}
               <span className="font-bold text-xs">${current.toFixed(2)}</span>
             </div>
-            <div className="text-[9px] text-emerald-600 font-medium">
+            <div className="text-[9px] text-green-600 font-medium">
               +${(current - cost).toFixed(2)}
             </div>
           </div>
@@ -623,9 +623,6 @@ export function ProductsTable({ onPriceChange }: ProductsTableProps) {
           className="max-w-96 h-8 text-xs"
         />
         <div className="flex gap-2">
-          <Button variant={"outline"} size={"sm"}>
-            <Filter /> Filter
-          </Button>
           <Popover>
             <PopoverTrigger asChild>
               <Button
