@@ -16,6 +16,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import ParametersPanel from "@/components/ui/custom/ParametersPanel";
 
 export default function Simulator() {
   const [showTutorial, setShowTutorial] = useState(false);
@@ -111,11 +112,15 @@ export default function Simulator() {
 
       {/* Main Layout */}
       <div className="w-full h-16 border-b border-stone-200 bg-white fixed z-50"></div>
+      <div className="w-full flex items-center justify-end pr-68 h-16 border-t border-stone-200 bg-white bottom-0 fixed z-50">
+        <Button>Run Simulation</Button>
+      </div>
       <div className="bg-white px-6 py-2 pt-17 h-full w-5/8 border-r border-stone-200 overflow-auto">
         <ProductsTable />
       </div>
       <div className="h-full w-3/8  pt-17 overflow-hidden bg-slate-50">
-        <NodePanel />
+        {/* <NodePanel /> */}
+        <ParametersPanel />
       </div>
     </div>
   );
