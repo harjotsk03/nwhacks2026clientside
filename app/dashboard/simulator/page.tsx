@@ -38,13 +38,89 @@ import { ChartLineMultiple } from "@/components/ui/custom/chart-line-multiple";
 
 type CustomerType = "student" | "middle-aged" | "elderly";
 
-interface Customer {
-  id: number;
-  x: number;
-  y: number;
-  status: string;
-  type: CustomerType;
+export interface EmotionBreakdown {
+  frustrated?: number;
+  neutral?: number;
+  anxious?: number;
+  good?: number;
+  excited?: number;
 }
+
+export interface ArchetypeDetail {
+  buy: number;
+  skip: number;
+  switch: number;
+  total: number;
+}
+
+export interface SimSummary {
+  totalPersonas: number;
+  buyCount: number;
+  skipCount: number;
+  switchCount: number;
+  buyRate: number;
+  skipRate: number;
+  switchRate: number;
+  emotionBreakdown: EmotionBreakdown;
+  pricePerceptionBreakdown: Record<string, number>;
+  trustDistribution: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+}
+
+export interface SimulationResponse {
+  success: boolean;
+  turnNumber: number;
+  aiInsight: string;
+  summary: SimSummary;
+  momentum: {
+    leaving: number;
+    staying: number;
+    switching: number;
+    mood: string;
+    marketMood: string;
+  };
+  brandHealth: {
+    permanentlyGone: number;
+    onLastChance: number;
+    hasRoutine: number;
+    averageTrust: number;
+  };
+  archetypeInsights: Record<string, ArchetypeDetail>;
+}
+
+interface Customer {
+  personaId: number;
+  personaName: string;
+  archetype: string;
+  decision: "Buy" | "Skip";
+  reasoning: string;
+  emotion: string;
+  pricePerception: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  context: {
+    mood: string;
+    budgetRemaining: number;
+    trust: number;
+  };
+  personaDetails?: {
+    backstory: string;
+    quirks: string;
+    stats: {
+      priceSensitivity: number;
+      brandLoyalty: number;
+      socialInfluence: number;
+      qualityFocus: number;
+    };
+  };
+  error?: boolean;
+}
+
 
 interface SimConfig {
   employees: { name: string; rate: number; hours: number }[];
@@ -85,44 +161,7 @@ export default function Simulator() {
     marketingTactics: [],
     productChanges: {},
   });
-
-  // Simulation Logic moved to Parent
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isRunningSim && customers.length < 20) {
-      interval = setInterval(() => {
-        setCustomers((prev) => {
-          if (prev.length >= 20) {
-            clearInterval(interval);
-            return prev;
-          }
-          const rand = Math.random() * 100;
-          let type: "student" | "middle-aged" | "elderly";
-
-          if (rand < 70) {
-            type = "student";
-          } else if (rand < 90) {
-            type = "middle-aged";
-          } else {
-            type = "elderly";
-          }
-          const newCustomer: Customer = {
-            id: prev.length,
-            x: Math.floor(Math.random() * 80) - 40,
-            y: Math.floor(Math.random() * 80) - 40,
-            type: type,
-            status: ["bg-green-700", "bg-orange-500", "bg-red-700"][
-              Math.floor(Math.random() * 3)
-            ],
-          };
-          return [...prev, newCustomer];
-        });
-      }, 300); // Speed up for better UX
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunningSim, customers.length]);
+  const [simSummary, setSimSummary] = useState<SimSummary | null>(null);
 
   const simComplete = customers.length === 20;
 
@@ -334,7 +373,7 @@ export default function Simulator() {
                 isSimulating={isRunningSim && !simComplete}
               />
               <div className="mt-4">
-                <ChartLineMultiple />
+                <ChartLineMultiple summary={simSummary} />
               </div>
             </div>
 
@@ -432,12 +471,39 @@ export default function Simulator() {
       <div className="w-full flex items-center justify-end pr-10 h-16 border-t border-stone-200 bg-white bottom-0 fixed z-50">
         <Button
           className={`mr-58 ${simComplete && "bg-green-600"}`}
-          onClick={() => {
+          onClick={async () => {
             setIsRunningSim(true);
-            AGENT_IDS.forEach((asst_id) => {
-              // make api call to end point with the asst_id and then store repsonse in an arr
-            });
-            console.log(simConfig);
+
+            try {
+              // Make API call to backend
+              const response = await fetch(
+                "http://localhost:3000/api/simulate/advanced",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(simConfig),
+                },
+              );
+
+              console.log(response);
+
+              const data = await response.json();
+
+              setSimSummary(data.summary);
+              setCustomers(data.simulation.results);
+
+              if (data.success) {
+                console.log("Simulation results:", data);
+                // You can now use the data to update your UI
+                // For example: setSimulationResults(data);
+              } else {
+                console.error("Simulation failed:", data.error);
+              }
+            } catch (error) {
+              console.error("API call failed:", error);
+            }
           }}
           disabled={isRunningSim}
         >

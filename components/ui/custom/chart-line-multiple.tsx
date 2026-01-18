@@ -1,7 +1,14 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { AlertCircle, TrendingDown } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
@@ -18,81 +25,132 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-export const description = "A multiple line chart";
+export interface EmotionBreakdown {
+  frustrated?: number;
+  neutral?: number;
+  anxious?: number;
+  good?: number;
+  excited?: number;
+}
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+export interface ArchetypeDetail {
+  buy: number;
+  skip: number;
+  switch: number;
+  total: number;
+}
+
+export interface SimSummary {
+  totalPersonas: number;
+  buyCount: number;
+  skipCount: number;
+  switchCount: number;
+  buyRate: number;
+  skipRate: number;
+  switchRate: number;
+  emotionBreakdown: EmotionBreakdown;
+  pricePerceptionBreakdown: Record<string, number>;
+  trustDistribution: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+}
+
+export interface SimulationResponse {
+  success: boolean;
+  turnNumber: number;
+  aiInsight: string;
+  summary: SimSummary;
+  momentum: {
+    leaving: number;
+    staying: number;
+    switching: number;
+    mood: string;
+    marketMood: string;
+  };
+  brandHealth: {
+    permanentlyGone: number;
+    onLastChance: number;
+    hasRoutine: number;
+    averageTrust: number;
+  };
+  archetypeInsights: Record<string, ArchetypeDetail>;
+}
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
+  count: {
+    label: "Agents",
+    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
-export function ChartLineMultiple() {
+export function ChartLineMultiple({ summary }: { summary: any | null }) {
+  if (!summary || !summary.emotionBreakdown) return null;
+
+  // Transform data safely
+  const chartData = Object.entries(summary.emotionBreakdown)
+    .filter(([_, count]) => (count as number) > 0) // Only show emotions with values
+    .map(([emotion, count]) => ({
+      emotion: emotion.charAt(0).toUpperCase() + emotion.slice(1),
+      count: count as number,
+      fill: emotion === "frustrated" ? "#ef4444" : "hsl(var(--chart-1))",
+    }));
+
+  const totalActions = (summary.buyCount || 0) + (summary.skipCount || 0);
+  const conversionRate =
+    totalActions > 0
+      ? ((summary.buyCount / totalActions) * 100).toFixed(1)
+      : "0";
+
   return (
-    <Card>
+    <Card className="border-stone-200 shadow-sm">
       <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle className="text-md">Market Sentiment Analysis</CardTitle>
+        <CardDescription>Emotional response to current pricing</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart
+        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart
             accessibilityLayer
             data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+            layout="vertical"
+            margin={{ left: 0, right: 40, top: 0, bottom: 0 }}
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+            <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+            {/* Added YAxis and XAxis correctly */}
+            <YAxis dataKey="emotion" type="category" hide />
+            <XAxis type="number" hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line
-              dataKey="desktop"
-              type="monotone"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              dataKey="mobile"
-              type="monotone"
-              stroke="var(--color-mobile)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
+            <Bar dataKey="count" radius={5}>
+              <LabelList
+                dataKey="emotion"
+                position="insideLeft"
+                offset={8}
+                className="fill-white font-medium text-[10px]"
+              />
+              <LabelList
+                dataKey="count"
+                position="right"
+                offset={8}
+                className="fill-foreground font-mono"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              Showing total visitors for the last 6 months
-            </div>
-          </div>
+      <CardFooter className="flex-col items-start gap-1 text-sm bg-slate-50/50 pt-4">
+        <div className="flex gap-2 leading-none font-bold text-red-600">
+          <AlertCircle className="h-4 w-4" />
+          Critical Sentiment: {summary.emotionBreakdown.frustrated || 0} agents
+          frustrated
+        </div>
+        <div className="text-muted-foreground text-xs">
+          Conversion Rate: {conversionRate}%
         </div>
       </CardFooter>
     </Card>

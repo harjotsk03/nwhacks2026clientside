@@ -120,11 +120,11 @@ export default function SetupWizard() {
     setAnalysisProgress(0);
 
     setAnalysisStep("Analyzing location data...");
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 400)); // Reduced from 1200
     setAnalysisProgress(25);
 
     setAnalysisStep("Searching for nearby competitors...");
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 500)); // Reduced from 1500
     setAnalysisProgress(50);
 
     const discoveredCompetitors = [
@@ -139,19 +139,19 @@ export default function SetupWizard() {
     setSelectedCompetitors([1, 2, 3]);
 
     setAnalysisStep("Analyzing transaction patterns...");
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 300)); // Reduced from 1000
     setAnalysisProgress(75);
     updateField("avgTransaction", "$8.50");
 
     setAnalysisStep("Identifying unique selling points...");
-    await new Promise((r) => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 400)); // Reduced from 1200
     setAnalysisProgress(100);
     updateField(
       "uniqueValue",
       "Authentic Italian espresso, cozy study atmosphere, locally-sourced pastries",
     );
 
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 200)); // Snappy transition
     setIsAnalyzing(false);
     setStep(3);
   };
@@ -171,11 +171,12 @@ export default function SetupWizard() {
 
     for (let i = 0; i < steps.length; i++) {
       setCustomerStatus(steps[i]);
-      await new Promise((r) => setTimeout(r, 1100));
+      // Reduced from 1100ms per step to 300ms
+      await new Promise((r) => setTimeout(r, 300));
       setCustomerProgress(((i + 1) / steps.length) * 100);
     }
 
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 300));
     setIsCreatingCustomers(false);
     router.push("/dashboard/simulator");
   };
