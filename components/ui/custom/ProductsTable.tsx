@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CardDescription, CardTitle } from "../card";
 
 export type CafeProduct = {
   id: string;
@@ -242,6 +243,11 @@ export function ProductsTable() {
 
   return (
     <div className="w-full">
+      <CardTitle className="mt-4">Product Price Adjustments</CardTitle>
+      <CardDescription className="mt-2">
+        Edit the price for each product and test how it effects your customers
+        and your revenue.
+      </CardDescription>
       <div className="flex justify-between items-center py-4">
         <Input
           placeholder="Search for a product..."
@@ -259,7 +265,7 @@ export function ProductsTable() {
           2. Add overflow-auto
           3. Add "relative" to keep the sticky header positioned correctly
       */}
-      <div className="relative h-136 overflow-scroll no-scrollbar rounded-md border">
+      <div className="relative h-118 overflow-scroll no-scrollbar rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
